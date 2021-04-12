@@ -68,13 +68,13 @@ dataproc_t* dataprocCreate(int buffer_size);
 dataproc_msg_t** dataprocDestroy(dataproc_t* data_proc);
 
 // Returns pointer to allocated and populated dataproc_msg_t
-dataproc_msg_t* dataprocMsgCreate(dataproc_cmd_t CMD, void* (*p_func)(void*), void* p_args, size_t arg_size);
+dataproc_msg_t* dataprocMsgCreate(dataproc_cmd_t CMD, void* (*p_func)(void*), void* p_args);
 
 // frees all memory allocated for a dataproc_msg_t
 void dataprocMsgDestroy(dataproc_msg_t* msg);
 
 // Constructs and sends a command to data_processor to execute the provided function with the provided arguments
-int dataprocSendData(dataproc_t* data_processor, void* (*p_func)(void*), void* p_args, size_t arg_size, int priority, bool blocking);
+int dataprocSendData(dataproc_t* data_processor, void* (*p_func)(void*), void* p_args, int priority, bool blocking);
 
 // Constructs and sends the stop command to the data processor. dataprocMain() will return once received
 int dataprocSendStop(dataproc_t* data_processor, int priority, bool blocking);

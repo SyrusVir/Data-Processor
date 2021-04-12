@@ -43,16 +43,12 @@ dataproc_msg_t** dataprocDestroy(dataproc_t* data_proc)
  * Description: Memory space is allocated to duplicate the provided function arguments and for the output message 
  *              structure
  */
-dataproc_msg_t* dataprocMsgCreate(dataproc_cmd_t CMD, void* (*p_func)(void*), void* p_args, size_t arg_size)
+dataproc_msg_t* dataprocMsgCreate(dataproc_cmd_t CMD, void* (*p_func)(void*), void* p_args)
 {
     dataproc_msg_t* out_msg = (dataproc_msg_t*) malloc(sizeof(dataproc_msg_t));
-    out_msg->p_args = malloc(arg_size);
-
+    out_msg->p_args = p_args;
     out_msg->CMD = CMD;
     out_msg->p_func = p_func;
-    
-    if (p_args == NULL) out_msg->p_args = NULL;
-    else memcpy(out_msg->p_args, p_args, arg_size);
 
     return out_msg;
 }
@@ -70,14 +66,14 @@ void dataprocMsgDestroy(dataproc_msg_t* msg)
     free(msg);
 }
 
-int dataprocSendData(dataproc_t* data_processor, void* (*p_func)(void*), void* p_args, size_t arg_size, int priority, bool blocking)
+int dataprocSendData(dataproc_t* data_processor, void* (*p_func)(void*), void* p_args, int priority, bool blocking)
 {
-    return fifoPush(data_processor->buffer, (void*)dataprocMsgCreate(DATAPROC_CMD_DATA, p_func, p_args, arg_size), priority, blocking);
+    return fifoPush(data_processor->buffer, (void*)dataprocMsgCreate(DATAPROC_CMD_DATA, p_func, p_args), priority, blocking);
 }
 
 int dataprocSendStop(dataproc_t* data_processor, int priority, bool blocking)
 {
-    return fifoPush(data_processor->buffer, (void*)dataprocMsgCreate(DATAPROC_CMD_STOP, NULL, NULL, 0), priority, blocking);
+    return fifoPush(data_processor->buffer, (void*)dataprocMsgCreate(DATAPROC_CMD_STOP, NULL, NULL), priority, blocking);
 }
 
 void* dataprocMain(void* arg_dataproc)
