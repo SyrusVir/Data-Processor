@@ -62,7 +62,6 @@ dataproc_msg_t* dataprocMsgCreate(dataproc_cmd_t CMD, void* (*p_func)(void*), vo
  */
 void dataprocMsgDestroy(dataproc_msg_t* msg)
 {
-    free(msg->p_args);
     free(msg);
 }
 
